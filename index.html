@@ -20,7 +20,6 @@
         }
     </style>
 </head>
-
 <body>
     <h1>Permission Request Demo</h1>
     <button onclick="requestLocation()">Request Location</button>
@@ -34,7 +33,7 @@
 
         async function requestLocation() {
             try {
-                const permission = await navigator.geolocation.query({ name: 'geolocation' });
+                const permission = await navigator.geolocation.getCurrentPosition({ name: 'geolocation' });
                 output.innerText = `Location Permission: ${permission.state}`;
                 if (permission.state === 'granted') {
                     navigator.geolocation.getCurrentPosition((position) => {
@@ -44,7 +43,7 @@
             } catch (err) {
                 output.innerText = `Location Error: ${err.message}`;
             }
-        }
+        }   
 
         async function requestCamera() {
             try {
