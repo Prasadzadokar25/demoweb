@@ -20,6 +20,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Permission Request Demo</h1>
     <button onclick="requestLocation()">Request Location</button>
@@ -27,27 +28,29 @@
     <button onclick="requestNotification()">Request Notification</button>
 
     <p id="output"></p>
-
+<!--   -->
     <script>
         const output = document.getElementById('output');
-
-        async function requestLocation() {
-            try {
-                const permission = await navigator.geolocation.getCurrentPosition({ name: 'geolocation' });
-                output.innerText = `Location Permission: ${permission.state}`;
-                if (permission.state === 'granted') {
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        output.innerText += `\nLocation: ${position.coords.latitude}, ${position.coords.longitude}`;
-                    });
-                }
-            } catch (err) {
-                output.innerText = `Location Error: ${err.message}`;
+  
+        
+        function requestLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        output.innerText = `Location Permission: Granted\nLocation: ${position.coords.latitude}, ${position.coords.longitude}`;
+                    },
+                    (err) => {
+                        output.innerText = `Location Error: ${err.message}`;
+                    }
+                );
+            } else {
+                output.innerText = "Geolocation is not supported by this browser.";
             }
-        }   
+        }
 
         async function requestCamera() {
             try {
-                const permission = await navigator.mediaDevices.getUserMedia({ video: true });
+                await navigator.mediaDevices.getUserMedia({ video: true });
                 output.innerText = `Camera Permission: Granted`;
             } catch (err) {
                 output.innerText = `Camera Error: ${err.message}`;
