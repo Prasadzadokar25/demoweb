@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Permission Request Demo</h1>
+    <button onclick="requestLocation()">Request Location</button>
+    <button onclick="requestCamera()">Request Camera</button>
+    <button onclick="requestNotification()">Request Notification</button>
+
+    <p id="output"></p>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function requestLocation() {
+            try {
+                const permission = await navigator.permissions.query({ name: 'geolocation' });
+                output.innerText = `Location Permission: ${permission.state}`;
+                if (permission.state === 'granted') {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        output.innerText += `\nLocation: ${position.coords.latitude}, ${position.coords.longitude}`;
+                    });
+                }
+            } catch (err) {
+                output.innerText = `Location Error: ${err.message}`;
+            }
+        }
+
+        async function requestCamera() {
+            try {
+                const permission = await navigator.mediaDevices.getUserMedia({ video: true });
+                output.innerText = `Camera Permission: Granted`;
+            } catch (err) {
+                output.innerText = `Camera Error: ${err.message}`;
+            }
+        }
+
+        async function requestNotification() {
+            try {
+                const permission = await Notification.requestPermission();
+                output.innerText = `Notification Permission: ${permission}`;
+            } catch (err) {
+                output.innerText = `Notification Error: ${err.message}`;
+            }
+        }
+    </script>
+</body>
+
+</html>
