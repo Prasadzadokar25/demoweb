@@ -34,7 +34,7 @@
 
         async function requestLocation() {
             try {
-                const permission = await navigator.permissions.query({ name: 'geolocation' });
+                const permission = await navigator.geolocation.query({ name: 'geolocation' });
                 output.innerText = `Location Permission: ${permission.state}`;
                 if (permission.state === 'granted') {
                     navigator.geolocation.getCurrentPosition((position) => {
