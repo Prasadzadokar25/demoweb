@@ -101,26 +101,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload in WebView</title>
+    <title>File Upload</title>
 </head>
 
 <body>
     <h1>Upload Image</h1>
     <button onclick="selectImage()">Choose Image</button>
     <button onclick="captureImage()">Take a Photo</button>
+    <input type="file" id="fileInput" accept="image/*" capture="user" style="display: none;"
+        onchange="handleFileSelection(event)">
     <p id="output"></p>
 
     <script>
+        function isFlutterWebView() {
+            return window.flutter_inappwebview !== undefined;
+        }
+
         function selectImage() {
-            window.flutter_inappwebview.callHandler('handleFileUpload', 'gallery');
+            if (isFlutterWebView()) {
+                window.flutter_inappwebview.callHandler('handleFileUpload', 'gallery');
+            } else {
+                document.getElementById('fileInput').removeAttribute('capture');
+                document.getElementById('fileInput').click();
+            }
         }
 
         function captureImage() {
-            window.flutter_inappwebview.callHandler('handleFileUpload', 'camera');
+            if (isFlutterWebView()) {
+                window.flutter_inappwebview.callHandler('handleFileUpload', 'camera');
+            } else {
+                document.getElementById('fileInput').setAttribute('capture', 'environment');
+                document.getElementById('fileInput').click();
+            }
+        }
+
+        function handleFileSelection(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('output').innerText = `Selected: ${file.name}`;
+            }
         }
 
         function onFileSelected(filePath) {
-            document.getElementById('output').innerText = "Selected: " + filePath;
+            document.getElementById('output').innerText = `Selected (Flutter): ${filePath}`;
         }
     </script>
 </body>
