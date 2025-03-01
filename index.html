@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -89,6 +89,38 @@
             } catch (err) {
                 output.innerText = `Picture Selection Error: ${err.message}`;
             }
+        }
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload in WebView</title>
+</head>
+
+<body>
+    <h1>Upload Image</h1>
+    <button onclick="selectImage()">Choose Image</button>
+    <button onclick="captureImage()">Take a Photo</button>
+    <p id="output"></p>
+
+    <script>
+        function selectImage() {
+            window.flutter_inappwebview.callHandler('handleFileUpload', 'gallery');
+        }
+
+        function captureImage() {
+            window.flutter_inappwebview.callHandler('handleFileUpload', 'camera');
+        }
+
+        function onFileSelected(filePath) {
+            document.getElementById('output').innerText = "Selected: " + filePath;
         }
     </script>
 </body>
