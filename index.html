@@ -26,13 +26,15 @@
     <button onclick="requestLocation()">Request Location</button>
     <button onclick="requestCamera()">Request Camera</button>
     <button onclick="requestNotification()">Request Notification</button>
+    <button onclick="requestAndSelectPicture()">Select Picture</button>
 
     <p id="output"></p>
-<!--   -->
+    <img id="preview" style="max-width: 100%; display: none;" />
+
     <script>
         const output = document.getElementById('output');
-  
-        
+        const preview = document.getElementById('preview');
+
         function requestLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -63,6 +65,29 @@
                 output.innerText = `Notification Permission: ${permission}`;
             } catch (err) {
                 output.innerText = `Notification Error: ${err.message}`;
+            }
+        }
+
+        async function requestAndSelectPicture() {
+            try {
+                await navigator.mediaDevices.getUserMedia({ video: true });
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                input.click();
+            } catch (err) {
+                output.innerText = `Picture Selection Error: ${err.message}`;
             }
         }
     </script>
